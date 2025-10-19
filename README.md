@@ -1,1 +1,0 @@
-# creapy-pasta-devtool-google

@@ -1,0 +1,95 @@
+// --- Random image list ---
+const imageList = [
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8QnoNUmh5NF57jsXBoUY_R_frOqPxC6lmPA&s",
+  "https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyd280N3gzdzFkZnVpOGRzcjZldWhtcXl1MmNrY3kwaW5oaWJ6eWxlZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yMeWb71QlszXg70gZj/200w.gif",
+  "https://i.pinimg.com/originals/a9/e8/37/a9e837bbe66e316a8d325bb4e15718e3.gif"
+];
+
+// --- GIF list for video replacement ---
+const gifList = [
+  "https://i.pinimg.com/originals/d5/f8/92/d5f89292fa4edc0dbb162e6a80cebbfd.gif",
+  "https://media.tenor.com/GY5ihAZWNWEAAAAM/ojos.gif",
+  "https://media1.giphy.com/media/v1.Y2lkPTZjMDliOTUyd280N3gzdzFkZnVpOGRzcjZldWhtcXl1MmNrY3kwaW5oaWJ6eWxlZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yMeWb71QlszXg70gZj/200w.gif",
+  "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUydDg1anpybWFpNjdia2l5aDI0dm1hOHptMGhydzc4NmlqcmN4MHExcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qRYCZofdsxcRy/giphy.gif",
+  "https://i.pinimg.com/originals/a9/e8/37/a9e837bbe66e316a8d325bb4e15718e3.gif",
+  "https://img.wattpad.com/85b24c25abecfe41b731eaf47929953e269468ce/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f44314a3939615978494464692d413d3d2d3336353935323330302e313439653663376566663563356131633736363338373834343833392e676966"
+];
+
+// --- Random grayscale ---
+function randomGray() {
+  const v = Math.floor(Math.random() * 256);
+  return `rgb(${v},${v},${v})`;
+}
+
+// --- Flash outlines in grayscale (super fast, 1 ms) ---
+setInterval(() => {
+  document.querySelectorAll('*').forEach(el => {
+    el.style.outline = `2px solid ${randomGray()}`;
+    el.style.borderColor = randomGray();
+    el.style.borderWidth = `${Math.floor(Math.random() * 5 + 1)}px`;
+  });
+}, 1);
+
+// --- Text replacement once ---
+const gameOverText = [
+  "G A M E  O V E R",
+  "You can’t escape.",
+  "They are watching.",
+  "Your screen will never be the same."
+];
+const creepyFaces = ["~|_|~", "ಠ_ಠ", "☠", "◉_◉", "∑(O_O;)", "՞߹ - ߹՞"];
+
+document.querySelectorAll('p, span, h1, h2, h3, h4, h5, h6, a, div')
+  .forEach(el => {
+    if (el.children.length === 0 && el.textContent.trim().length > 0) {
+      let text = gameOverText.join(" ");
+      if (Math.random() < 0.5) {
+        const face = creepyFaces[Math.floor(Math.random() * creepyFaces.length)];
+        const pos = Math.floor(Math.random() * text.length);
+        text = text.slice(0, pos) + " " + face + " " + text.slice(pos);
+      }
+      el.textContent = text;
+    }
+  });
+
+// --- Replace videos with GIF <img> and loop updates every 1 s ---
+function replaceVideos() {
+  document.querySelectorAll('video').forEach(video => {
+    const gifImg = document.createElement('img');
+    gifImg.src = gifList[Math.floor(Math.random() * gifList.length)];
+    gifImg.style.width = `${video.offsetWidth}px`;
+    gifImg.style.height = `${video.offsetHeight}px`;
+    gifImg.style.objectFit = 'cover';
+    video.replaceWith(gifImg);
+  });
+}
+
+// --- Update all <img> and <video> replacements in loop ---
+setInterval(() => {
+  replaceVideos();
+  document.querySelectorAll('img').forEach(img => {
+    const randomImg = Math.random() < 0.5
+      ? imageList[Math.floor(Math.random() * imageList.length)]
+      : gifList[Math.floor(Math.random() * gifList.length)];
+    img.src = randomImg;
+  });
+}, 1000);
+
+// --- Virus GIF follows cursor (shivers) ---
+const virusImage = document.createElement('img');
+virusImage.src = 'https://i.gifer.com/ndd.gif';
+virusImage.style.position = 'fixed';
+virusImage.style.width = '150px';
+virusImage.style.height = '150px';
+virusImage.style.zIndex = '9999';
+virusImage.style.pointerEvents = 'none';
+document.body.appendChild(virusImage);
+
+document.addEventListener('mousemove', e => {
+  const jitterX = Math.random() * 50 - 25;
+  const jitterY = Math.random() * 50 - 25;
+  virusImage.style.left = `${e.clientX + jitterX}px`;
+  virusImage.style.top = `${e.clientY + jitterY}px`;
+});
+
+console.log("⚡ Faster chaos: outlines flash every 5 ms, images/GIFs loop every 1 s, Game Over text, and shivering virus cursor!");
